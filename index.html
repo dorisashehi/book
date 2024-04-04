@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <title>Books</title>
+
+    <style>
+        body{
+            background-color: #f1f1f1;
+        }
+        .container {
+            min-height: 100%;
+            height: 100%;
+            margin-top: 100px;
+        }
+    </style>
+
+    <script>
+
+        const myLibrary = [];
+
+        function Book(title, author, pages, description, read = false,){
+            this.title = title
+            this.author = author
+            this.pages = pages
+            this.read = read
+            this.description = description
+            this.status = (this.read) ? "read" : "not read"
+        }
+        var book1 = new Book("Hobbit", "J.R.R. Tolkien", 29, "heyyyyy");
+        var book2 = new Book("Hobbitdgdf", "J.R.R.fgdgd Tolkien", 295, "fdgdf")
+
+
+
+        document.addEventListener("DOMContentLoaded", () => {
+            myLibrary.push(book1, book2)
+            const row = document.querySelector(".line");
+
+            var content = myLibrary.map((book) => {
+
+                return(
+                    `<div class="col-lg-4">
+                        <div class="card mb-3" style="max-width: 540px; height: 100%;">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="https://mdbcdn.b-cdn.net/wp-content/uploads/2020/06/vertical.webp" alt="Trendy Pants and Shoes" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                    <h5 class="card-title">${book.title}</h5>
+                                    <p class="card-text">
+                                        <b>By:</b> ${book.author}
+                                    </p>
+                                    <p class="card-text">
+                                        <span>${book.description}</span>
+                                    </p>
+                                    <p class="card-text">
+                                        <small class="text-muted">${book.pages} pages</small>
+                                    </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `
+                )
+
+            }).join('')
+            row.innerHTML = content
+        });
+
+
+    </script>
+</head>
+<body>
+    <!-- <header>
+
+        <nav class="navbar navbar-expand-lg bg-body fixed-top">
+            <div class="container-fluid">
+            <button
+                data-mdb-collapse-init
+                class="navbar-toggler"
+                type="button"
+                data-mdb-target="#navbarExample01"
+                aria-controls="navbarExample01"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarExample01">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Pricing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                </ul>
+            </div>
+            </div>
+        </nav>
+    </header> -->
+    <div class="container">
+
+        <div class="row col-12 g-3 line">
+
+        </div>
+    </div>
+
+    <!-- <footer class="bg-body-tertiary text-center text-lg-start">
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+          © 2020 Copyright:
+          <a class="text-body" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+        </div>
+    </footer> -->
+
+</body>
+</html>
