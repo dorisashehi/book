@@ -18,6 +18,8 @@ body{
     color: #fff;
     background-color: #ff484a;
     border-color: #ff484a;
+    height: 37px;
+    border-radius: unset;
 
 }
 
@@ -33,4 +35,12 @@ header .mask .profile-container{
     border: 1px solid white;
     background-image: url('./assets/images/profile.jpeg');
     background-position: top;
+}
+
+#dialog{
+    height: 500px;
+    border: none;
+    border-radius: 0.5em;
+    padding: 30px 45px;
+    width: 500px;
 }

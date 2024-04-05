@@ -19,11 +19,12 @@
 
         const myLibrary = [];
 
-        function Book(title, author, pages, description){
+        function Book(title, author, pages, description, read = false){
             this.title = title
             this.author = author
             this.pages = pages
             this.description = description
+            this.read = read
         }
 
         Book.prototype.setStatus = function (read) {
@@ -34,13 +35,20 @@
             return this.read
         }
 
+        // Book.prototype.addBook = function(title, author, pages, description){
+        //     let book = new Book(title, author, pages, description);
+        //     myLibrary.push(book)
+
+        // }
+
+
         function seedBooks(){
-            var book1 = new Book("Hobbit", "J.R.R. Tolkien", 29, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ");
-            book1.setStatus(false)
+            var book1 = new Book(["Hobbit", "J.R.R. Tolkien", 29, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. "]);
+            //book1.setStatus(false)
             console.log(book1.getStatus())
 
             var book2 = new Book("New Storem", "J.R.R. Tolkien", 295, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ")
-            book2.setStatus(true)
+            //book2.setStatus(true)
             console.log(book2.getStatus())
 
             myLibrary.push(book1, book2)
@@ -56,6 +64,8 @@
             const dialog = document.getElementById("dialog");
             const closeDialog = dialog.querySelector("#js-close");
             const openDialog = document.getElementById("open-dialog");
+            const submitBtn = document.getElementById("submit");
+            const inputs = document.querySelectorAll("input");
 
             openDialog.addEventListener("click", () => dialog.showModal())
 
@@ -64,6 +74,12 @@
                 dialog.close();
             });
 
+            submitBtn.addEventListener("click", (e) => {
+                let inputValues = []
+                Array.from(inputs).map((input) => inputValues.push(input.value))
+                myLibrary.push(new Book(inputValues))
+                loadBooks() //refresh withoud loading
+            });
 
         }
 
@@ -71,7 +87,7 @@
         document.addEventListener("DOMContentLoaded", () => {
             seedBooks()  //defaut values
             loadBooks()  //load all books
-            addNewBook()
+            addNewBook() //add listeners for dialog box
         });
 
         function getColumns(book){
@@ -112,7 +128,7 @@
 <body>
 
     <div class="container">
-        <div class="row col-12 actions-section">
+        <div class="row col-12 actions-section mb-5">
             <h1></h1>
             <div class="row col-12">
                 <!-- Button trigger modal -->
@@ -127,27 +143,23 @@
             <form method="dialog">
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <input type="text" class="form-control" id="title" placeholder="Enter title">
+                    <input type="text" class="form-control" id="title" placeholder="Enter title" required>
                 </div>
                 <div class="form-group">
                     <label for="title">Author</label>
-                    <input type="text" class="form-control" id="author" placeholder="Enter author">
+                    <input type="text" class="form-control" id="author" placeholder="Enter author" required>
                 </div>
                 <div class="form-group">
                     <label for="title">Description</label>
-                    <textarea class="form-control" id="description" rows="3"></textarea>
+                    <textarea class="form-control" id="description" rows="5" required></textarea>
                 </div>
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Mark as read</label>
+                    <input type="checkbox" class="form-check-input" id="status" required>
+                    <label class="form-check-label" for="status">Mark as read</label>
                 </div>
-                <div>
-                    <input
-                    type="submit"
-                    id="novalidate-close"
-                    value="Submit"
-                    formnovalidate />
-                    <input type="submit" id="js-close" value="Close" />
+                <div class="mt-4">
+                    <input type="submit" id="submit" value="Submit" class="btn btn-primary" formnovalidate />
+                    <input type="submit" class="btn btn-primary" id="js-close" value="Close" />
                 </div>
             </form>
         </dialog>
