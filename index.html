@@ -28,7 +28,7 @@
         }
 
         Book.prototype.setStatus = function (read) {
-            this.read = (read) ? "read" : "not read"
+            this.read = (read) ? true : false
         }
 
         Book.prototype.getStatus = function(){
@@ -59,6 +59,7 @@
             var content = myLibrary.map((book, index) => getColumns(book, index)).join('')
             row.innerHTML = content
             getRemoveCard() //add listeners for remove button
+            changeStatus()
         }
 
         function getColumns(book, index){
@@ -69,7 +70,7 @@
 
                         <div class="card mb-3" style="max-width: 540px; height: 100%;">
                             <div class="row g-0">
-                                <div class="col-md-4 p-0">
+                                <div class="col-md-4">
                                     <img src="./assets/images/book.jpg" alt="Trendy Pants and Shoes" class="img-fluid rounded-start">
                                 </div>
                                 <div class="col-md-8 p-0">
@@ -82,8 +83,12 @@
                                             <b>By:</b> ${book.author}
                                         </p>
                                         <p class="card-text">
-                                            <span>${book.description}</span>
+                                            <span>${book.description} ${book.read}</span>
                                         </p>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="status" ${(book.read)? "checked" : ""} name="status" data-id="${index}">
+                                            <label class="form-check-label" for="status">Mark as read</label>
+                                        </div>
                                         <p class="card-text">
                                             <small class="text-muted">${book.pages} pages</small>
                                         </p>
@@ -129,16 +134,37 @@
             });
 
             submitBtn.addEventListener("click", (e) => {
-                console.log(form)
+
+                console.log(form.elements["status"].value)
                 let inputValues = {
                     title: form.elements["title"].value,
                     author: form.elements["author"].value,
                     pages: form.elements["pages"].value,
                     description: form.elements["description"].value,
+                    read: form.elements["status"].hasAttribute("checked") ? true : false
+
                 }
-                myLibrary.push(new Book(inputValues.title, inputValues.author, inputValues.pages, inputValues.description))
+                myLibrary.push(new Book(inputValues.title, inputValues.author, inputValues.pages, inputValues.description, inputValues.read))
                 loadBooks() //refresh withouts loading
             });
+
+        }
+
+        function changeStatus(){
+            const statusCheck = document.querySelectorAll('.card-body #status')
+
+            Array.from(statusCheck).map((checkbox) => {
+                checkbox.addEventListener('click', () => {
+
+                    let bookID = checkbox.getAttribute('data-id')
+                    if(!myLibrary[bookID].getStatus()) {
+                        myLibrary[bookID].setStatus(true)
+                    }else{
+                        myLibrary[bookID].setStatus(false)
+                    }
+                    loadBooks() //refresh
+                })
+            })
 
         }
 
