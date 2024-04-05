@@ -13,48 +13,78 @@
 
     <title>Books</title>
 
-    <style>
-        body{
-            background-color: #f1f1f1;
-        }
-        .container {
-            min-height: 100%;
-            height: 100%;
-            margin-top: 100px;
-        }
-    </style>
+    <link rel="stylesheet" href="./assets/style/main.css">
 
     <script>
 
         const myLibrary = [];
 
-        function Book(title, author, pages, description, read = false,){
+        function Book(title, author, pages, description){
             this.title = title
             this.author = author
             this.pages = pages
-            this.read = read
             this.description = description
-            this.status = (this.read) ? "read" : "not read"
         }
-        var book1 = new Book("Hobbit", "J.R.R. Tolkien", 29, "heyyyyy");
-        var book2 = new Book("Hobbitdgdf", "J.R.R.fgdgd Tolkien", 295, "fdgdf")
 
+        Book.prototype.setStatus = function (read) {
+            this.read = (read) ? "read" : "not read"
+        }
+
+        Book.prototype.getStatus = function(){
+            return this.read
+        }
+
+        function seedBooks(){
+            var book1 = new Book("Hobbit", "J.R.R. Tolkien", 29, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ");
+            book1.setStatus(false)
+            console.log(book1.getStatus())
+
+            var book2 = new Book("New Storem", "J.R.R. Tolkien", 295, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ")
+            book2.setStatus(true)
+            console.log(book2.getStatus())
+
+            myLibrary.push(book1, book2)
+        }
+
+        function loadBooks(){
+            const row = document.querySelector(".line");
+            var content = myLibrary.map((book) => getColumns(book)).join('')
+            row.innerHTML = content
+        }
+
+        function addNewBook(){
+            const dialog = document.getElementById("dialog");
+            const closeDialog = dialog.querySelector("#js-close");
+            const openDialog = document.getElementById("open-dialog");
+
+            openDialog.addEventListener("click", () => dialog.showModal())
+
+            closeDialog.addEventListener("click", (e) => {
+                e.preventDefault();
+                dialog.close();
+            });
+
+
+        }
 
 
         document.addEventListener("DOMContentLoaded", () => {
-            myLibrary.push(book1, book2)
-            const row = document.querySelector(".line");
+            seedBooks()  //defaut values
+            loadBooks()  //load all books
+            addNewBook()
+        });
 
-            var content = myLibrary.map((book) => {
+        function getColumns(book){
 
-                return(
-                    `<div class="col-lg-4">
+            return(
+                `
+                    <div class="col-lg-4">
                         <div class="card mb-3" style="max-width: 540px; height: 100%;">
                             <div class="row g-0">
                                 <div class="col-md-4">
                                     <img src="https://mdbcdn.b-cdn.net/wp-content/uploads/2020/06/vertical.webp" alt="Trendy Pants and Shoes" class="img-fluid rounded-start">
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-8 p-0">
                                     <div class="card-body">
                                     <h5 class="card-title">${book.title}</h5>
                                     <p class="card-text">
@@ -71,57 +101,59 @@
                             </div>
                         </div>
                     </div>
-                    `
-                )
+                `
+            )
 
-            }).join('')
-            row.innerHTML = content
-        });
+        }
 
 
     </script>
 </head>
 <body>
-    <!-- <header>
 
-        <nav class="navbar navbar-expand-lg bg-body fixed-top">
-            <div class="container-fluid">
-            <button
-                data-mdb-collapse-init
-                class="navbar-toggler"
-                type="button"
-                data-mdb-target="#navbarExample01"
-                aria-controls="navbarExample01"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-            >
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarExample01">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item active">
-                    <a class="nav-link" aria-current="page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                </ul>
-            </div>
-            </div>
-        </nav>
-    </header> -->
     <div class="container">
-
-        <div class="row col-12 g-3 line">
-
+        <div class="row col-12 actions-section">
+            <h1></h1>
+            <div class="row col-12">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" id="open-dialog">
+                    Add New
+                </button>
+            </div>
         </div>
+        <div class="row col-12 g-3 line"></div>
+        <!-- Modal -->
+        <dialog id="dialog">
+            <form method="dialog">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" placeholder="Enter title">
+                </div>
+                <div class="form-group">
+                    <label for="title">Author</label>
+                    <input type="text" class="form-control" id="author" placeholder="Enter author">
+                </div>
+                <div class="form-group">
+                    <label for="title">Description</label>
+                    <textarea class="form-control" id="description" rows="3"></textarea>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Mark as read</label>
+                </div>
+                <div>
+                    <input
+                    type="submit"
+                    id="novalidate-close"
+                    value="Submit"
+                    formnovalidate />
+                    <input type="submit" id="js-close" value="Close" />
+                </div>
+            </form>
+        </dialog>
     </div>
+
+
 
     <!-- <footer class="bg-body-tertiary text-center text-lg-start">
         <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
