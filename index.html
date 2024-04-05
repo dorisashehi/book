@@ -35,13 +35,6 @@
             return this.read
         }
 
-        // Book.prototype.addBook = function(title, author, pages, description){
-        //     let book = new Book(title, author, pages, description);
-        //     myLibrary.push(book)
-
-        // }
-
-
         function seedBooks(){
             var book1 = new Book("Hobbit", "J.R.R. Tolkien", 29, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ");
             //book1.setStatus(false)
@@ -56,7 +49,19 @@
 
         function loadBooks(){
             const row = document.querySelector(".line");
-            var content = myLibrary.map((book, index) => getColumns(book, index)).join('')
+            var content = ""
+
+            if(myLibrary.length > 0)
+            {
+                content = myLibrary.map((book, index) => getColumns(book, index)).join('')
+            }
+            else{
+                const emptyContent = document.createElement("div")
+                emptyContent.classList.add("error")
+                emptyContent.textContent = "No books available! Add a new one."
+                content = emptyContent.innerHTML
+                console.log(content)
+            }
             row.innerHTML = content
             getRemoveCard() //add listeners for remove button
             changeStatus()
@@ -83,7 +88,7 @@
                                             <b>By:</b> ${book.author}
                                         </p>
                                         <p class="card-text">
-                                            <span>${book.description} ${book.read}</span>
+                                            <span>${book.description}</span>
                                         </p>
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input" id="status" ${(book.read)? "checked" : ""} name="status" data-id="${index}">
@@ -103,17 +108,17 @@
         }
 
         function getRemoveCard(){
-                const removeBtn = document.querySelectorAll(".remove-icon");
+            const removeBtn = document.querySelectorAll(".remove-icon");
 
-                Array.from(removeBtn).map((btn) => {
-                    btn.addEventListener("click", () => {
+            Array.from(removeBtn).map((btn) => {
+                btn.addEventListener("click", () => {
 
-                        const id = btn.getAttribute('data-getid')
-                        myLibrary.splice(id, 1);
-                        loadBooks()
-                        console.log(myLibrary)
-                    })
+                    const id = btn.getAttribute('data-getid')
+                    myLibrary.splice(id, 1);
+                    loadBooks()
+                    console.log(myLibrary)
                 })
+            })
 
         }
 
@@ -222,15 +227,6 @@
             </form>
         </dialog>
     </div>
-
-
-
-    <!-- <footer class="bg-body-tertiary text-center text-lg-start">
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
-          © 2020 Copyright:
-          <a class="text-body" href="https://mdbootstrap.com/">MDBootstrap.com</a>
-        </div>
-    </footer> -->
 
 </body>
 </html>
