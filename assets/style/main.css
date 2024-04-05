@@ -10,6 +10,26 @@ body{
     height: 100%;
     object-fit: cover;
 }
+.container .card .remove-icon{
+    position: absolute;
+    right: 0px;
+    right: 7px;
+    top: -11px;
+    border-radius: 6.5em;
+    width: 20px;
+    border: 1px solid red;
+    height: 20px;
+    font-weight: bold;
+    color: #ffff;
+    background: red;
+    font-size: 13px;
+    text-align: center;
+    /*display: none;*/
+}
+.container .card .remove-icon.active{
+    display: block;
+}
+
 .container .actions-section{
     height: 100px;
     background-color: #ffffff;

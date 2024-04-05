@@ -56,9 +56,62 @@
 
         function loadBooks(){
             const row = document.querySelector(".line");
-            var content = myLibrary.map((book) => getColumns(book)).join('')
+            var content = myLibrary.map((book, index) => getColumns(book, index)).join('')
             row.innerHTML = content
+            getRemoveCard() //add listeners for remove button
         }
+
+        function getColumns(book, index){
+
+            return(
+                `
+                    <div class="col-lg-4">
+
+                        <div class="card mb-3" style="max-width: 540px; height: 100%;">
+                            <div class="row g-0">
+                                <div class="col-md-4 p-0">
+                                    <img src="./assets/images/book.jpg" alt="Trendy Pants and Shoes" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 p-0">
+                                    <div class="remove-icon" data-getid="${index}">
+                                        <i class="fas fa-remove" title="Remove Book"></i>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">${book.title}</h5>
+                                        <p class="card-text">
+                                            <b>By:</b> ${book.author}
+                                        </p>
+                                        <p class="card-text">
+                                            <span>${book.description}</span>
+                                        </p>
+                                        <p class="card-text">
+                                            <small class="text-muted">${book.pages} pages</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            )
+
+        }
+
+        function getRemoveCard(){
+                const removeBtn = document.querySelectorAll(".remove-icon");
+
+                Array.from(removeBtn).map((btn) => {
+                    btn.addEventListener("click", () => {
+
+                        const id = btn.getAttribute('data-getid')
+                        myLibrary.splice(id, 1);
+                        loadBooks()
+                        console.log(myLibrary)
+                    })
+                })
+
+        }
+
 
         function addNewBook(){
             const dialog = document.getElementById("dialog");
@@ -76,6 +129,7 @@
             });
 
             submitBtn.addEventListener("click", (e) => {
+                console.log(form)
                 let inputValues = {
                     title: form.elements["title"].value,
                     author: form.elements["author"].value,
@@ -92,40 +146,9 @@
         document.addEventListener("DOMContentLoaded", () => {
             seedBooks()  //defaut values
             loadBooks()  //load all books
-            addNewBook() //add listeners for dialog box
+            addNewBook() //add new book
         });
 
-        function getColumns(book){
-
-            return(
-                `
-                    <div class="col-lg-4">
-                        <div class="card mb-3" style="max-width: 540px; height: 100%;">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    <img src="https://mdbcdn.b-cdn.net/wp-content/uploads/2020/06/vertical.webp" alt="Trendy Pants and Shoes" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 p-0">
-                                    <div class="card-body">
-                                    <h5 class="card-title">${book.title}</h5>
-                                    <p class="card-text">
-                                        <b>By:</b> ${book.author}
-                                    </p>
-                                    <p class="card-text">
-                                        <span>${book.description}</span>
-                                    </p>
-                                    <p class="card-text">
-                                        <small class="text-muted">${book.pages} pages</small>
-                                    </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `
-            )
-
-        }
 
 
     </script>
@@ -133,7 +156,7 @@
 <body>
 
     <div class="container">
-        <div class="row col-12 actions-section mb-5">
+        <div class="row col-12 mb-5">
             <h1></h1>
             <div class="row col-12">
                 <!-- Button trigger modal -->
