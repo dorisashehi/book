@@ -127,8 +127,10 @@
             const pages = form.elements["pages"]
             const description = form.elements["description"]
             const status = form.elements["status"]
-            let errors = [];
+            let isRead = false;
+            status.addEventListener("click", () => isRead = !isRead)
 
+            let errors = [];
             const textRegExp =  /^[a-zA-Z]/;
 
 
@@ -148,7 +150,6 @@
             })
 
 
-
             submitBtn.addEventListener("click", (e) => { //on button click
 
                 if( title.value !== '' &&
@@ -158,7 +159,7 @@
                     status.value !== '' &&
                     errors.length == 0
                 ){
-                    myLibrary.push(new Book(title.value, author.value, pages.value, description.value, status.value))
+                    myLibrary.push(new Book(title.value, author.value, pages.value, description.value, isRead))
                     loadBooks() //refresh withouts loading
                     removeErrors(form);
                 }
@@ -243,27 +244,27 @@
         <dialog id="dialog">
             <form method="dialog">
                 <div class="form-group">
-                    <label for="title">Title</label>
+                    <label for="title">Title*</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
                     <em class="title-error">Put a valid name (text only)</em>
                 </div>
                 <div class="form-group">
-                    <label for="author">Author</label>
+                    <label for="author">Author*</label>
                     <input type="text" class="form-control" id="author" name="author" placeholder="Enter author" required>
                     <em class="author-error">Put a valid author (text only)</em>
                 </div>
                 <div class="form-group">
-                    <label for="pages">Pages</label>
+                    <label for="pages">Pages*</label>
                     <input type="number" class="form-control" id="pages" name="pages" placeholder="Enter Pages" required>
                     <em class="pages-error">Put a valid number of pages</em>
                 </div>
                 <div class="form-group">
-                    <label for="title">Description</label>
+                    <label for="title">Description*</label>
                     <textarea class="form-control" id="description" name="description" rows="5" maxlength="30" required></textarea>
                     <em class="description-error">Put a valid description (text only)</em>
                 </div>
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="status" name="status" required>
+                    <input type="checkbox" class="form-check-input" id="status" name="status">
                     <label class="form-check-label" for="status">Mark as read</label>
                     <!-- <span class="help-block">Something may have gone wrong</span> -->
                 </div>
