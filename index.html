@@ -27,24 +27,20 @@
             this.read = read
         }
 
-        Book.prototype.setStatus = function (read) { //function to change status
-            this.read = (read) ? true : false
-        }
-
-        Book.prototype.getStatus = function(){ //function to get status
-            return this.read
+        Book.prototype.toggleReadStatus = function () { //function to change status
+            this.read = !this.read
         }
 
         function seedBooks(){ //function test to add some fake books
-            var book1 = new Book("Hobbit", "J.R.R. Tolkien", 29, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ");
-            var book2 = new Book("New Storem", "Cicero", 295, "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.")
-            var book3 = new Book("Lorem Ipsum ", "Richard", 500, "Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC.")
-
-            myLibrary.push(book1, book2, book3)
+            myLibrary.push(
+                new Book("Hobbit", "J.R.R. Tolkien", 29, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. "),
+                new Book("New Storem", "Cicero", 295, "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable."),
+                new Book("Lorem Ipsum ", "Richard", 500, "Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC.")
+            )
         }
 
         function loadBooks(){ //function to loaf books
-            const row = document.querySelector(".line");
+            const bookContainer = document.querySelector(".line");
             var content = ""
 
             if(myLibrary.length > 0)
@@ -57,9 +53,8 @@
                 emptyContent.textContent = "No books available! Add a new one."
                 content = emptyContent.innerHTML
             }
-            row.innerHTML = content
-            getRemoveCard() //add listeners for remove button
-            changeStatus()
+            bookContainer.innerHTML = content
+            addEventListeners()
         }
 
         function getColumns(book, index){ //function to get books in columns
@@ -102,9 +97,14 @@
 
         }
 
+
+        function addEventListeners() { //listeners to change status and remove books
+            getRemoveCard();
+            changeStatus();
+        }
+
         function getRemoveCard(){ //function to remove a book
             const removeBtn = document.querySelectorAll(".remove-icon");
-
             Array.from(removeBtn).map((btn) => {
                 btn.addEventListener("click", () => {
                     const id = btn.getAttribute('data-getid')
@@ -112,7 +112,16 @@
                     loadBooks()
                 })
             })
+        }
 
+        function changeStatus(){ //function to change the status of the book
+            const statusCheck = document.querySelectorAll('.card-body #status')
+            Array.from(statusCheck).map((checkbox, index) => {
+                checkbox.addEventListener('click', () => {
+                    myLibrary[index].toggleReadStatus()
+                    loadBooks() //refresh
+                })
+            })
         }
 
 
@@ -121,37 +130,23 @@
             const dialog = document.getElementById("dialog");
             const submitBtn = document.getElementById("submit");
             const form = dialog.querySelector("form")
-
-            const title = form.elements["title"]
-            const author = form.elements["author"]
-            const pages = form.elements["pages"]
-            const description = form.elements["description"]
-            const status = form.elements["status"]
-            let isRead = false;
-            status.addEventListener("click", () => isRead = !isRead)
-
             let errors = [];
-            const textRegExp =  /^[a-zA-Z]/;
+            const inputs = ["title", "author", "pages", "description"].map((name) => form.elements[name]);
 
+            const status = form.elements["status"];
+            let isRead = false;
+            status.addEventListener("click", () => isRead = !isRead);
 
-            [title, author, description, pages].map((item) => { //on value change
-
+            inputs.map((item) => { //on value change
                 item.addEventListener("input", () => {
-
-                    let elementError = item.nextElementSibling;
-                    let error = true;
-
-                    if (item.name == "pages" &&  item.value > 0) error = false;
-                    if(item.value.length > 0 && textRegExp.test(item.value)) error = false;
-                    if(error) {elementError.classList.add("error"); errors.push(item)}
-                    else  elementError.classList.remove("error")
-
+                    validateInputs(item, errors)
                 })
             })
 
 
             submitBtn.addEventListener("click", (e) => { //on button click
 
+                errors = [];
                 if( title.value !== '' &&
                     author.value !== '' &&
                     pages.value !== '' &&
@@ -159,13 +154,20 @@
                     status.value !== '' &&
                     errors.length == 0
                 ){
-                    myLibrary.push(new Book(title.value, author.value, pages.value, description.value, isRead))
+
+                    myLibrary.push(new Book(
+                        title.value,
+                        author.value,
+                        pages.value,
+                        description.value,
+                        isRead)
+                    )
                     loadBooks() //refresh withouts loading
-                    removeErrors(form);
+                    removeErrors(inputs);
                 }
                 else{
                     e.preventDefault();
-                    showErrors(form)
+                    showErrors(inputs)
                 }
             });
 
@@ -175,7 +177,7 @@
 
             openDialog.addEventListener("click", () => {
                 dialog.showModal()
-                removeErrors(form); //remove errors
+                removeErrors(inputs); //remove errors
             })
 
             closeDialog.addEventListener("click", (e) => {
@@ -185,46 +187,38 @@
 
         }
 
-        function showErrors(form){ //function to show errors
-            errors = [];
-            [title, author, description, pages].map((item) => {
+        function validateInputs(item, index){
+
+            const textRegExp =  /^[a-zA-Z]/;
+            let elementError = item.nextElementSibling;
+            let error = true;
+
+            if (item.name == "pages" &&  item.value > 0) error = false;
+            if(textRegExp.test(item.value)) error = false;
+            if(error) {elementError.classList.add("error"); errors.push(item)}
+            else  elementError.classList.remove("error")
+
+        }
+
+        function showErrors(inputs){ //function to show errors
+            inputs.map((item) => {
                 if(item.value === '') item.nextElementSibling.classList.add("error")
             })
         }
 
-        function removeErrors(form){ //function to remove errors
+        function removeErrors(inputs){ //function to remove errors
             errors = [];
-            [title, author, description, pages].map((item) => {
+            inputs.map((item) => {
                 if(item.value === '') item.nextElementSibling.classList.remove("error");
                 item.value = ''
             })
         }
 
-
-        function changeStatus(){ //function to change the ctatus of the book
-            const statusCheck = document.querySelectorAll('.card-body #status')
-
-            Array.from(statusCheck).map((checkbox) => {
-                checkbox.addEventListener('click', () => {
-
-                    let bookID = checkbox.getAttribute('data-id')
-                    if(!myLibrary[bookID].getStatus()) {
-                        myLibrary[bookID].setStatus(true)
-                    }else{
-                        myLibrary[bookID].setStatus(false)
-                    }
-                    loadBooks() //refresh
-                })
-            })
-
-        }
         document.addEventListener("DOMContentLoaded", () => { //main function
             seedBooks()  //defaut values
             loadBooks()  //load all books
             addNewBook() //add new book
         });
-
-
 
     </script>
 </head>
