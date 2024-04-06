@@ -115,28 +115,32 @@
 
         }
 
-        let errors = [];
+
         function addNewBook(){ //function to add a book
+
             const dialog = document.getElementById("dialog");
-            const closeDialog = dialog.querySelector("#js-close");
-            const openDialog = document.getElementById("open-dialog");
             const submitBtn = document.getElementById("submit");
-            const inputs = dialog.querySelectorAll("input");
             const form = dialog.querySelector("form")
+
+            const title = form.elements["title"]
+            const author = form.elements["author"]
+            const pages = form.elements["pages"]
+            const description = form.elements["description"]
+            const status = form.elements["status"]
+            let errors = [];
 
             const textRegExp =  /^[a-zA-Z]/;
 
 
-            ["title", "author", "description", "pages"].map((item) => { //on value change
+            [title, author, description, pages].map((item) => { //on value change
 
-                form.elements[item].addEventListener("input", () => {
+                item.addEventListener("input", () => {
 
-                    let element = form.elements[item]
-                    let elementError = form.elements[item].nextElementSibling;
+                    let elementError = item.nextElementSibling;
                     let error = true;
 
-                    if (item == "pages" &&  element.value > 0) error = false;
-                    if(element.value.length > 0 && textRegExp.test(element.value)) error = false;
+                    if (item.name == "pages" &&  item.value > 0) error = false;
+                    if(item.value.length > 0 && textRegExp.test(item.value)) error = false;
                     if(error) {elementError.classList.add("error"); errors.push(item)}
                     else  elementError.classList.remove("error")
 
@@ -147,15 +151,14 @@
 
             submitBtn.addEventListener("click", (e) => { //on button click
 
-
-                if( form.elements["title"].value !== '' &&
-                    form.elements["author"].value !== '' &&
-                    form.elements["pages"].value !== '' &&
-                    form.elements["description"].value !== '' &&
-                    form.elements["status"].value !== '' &&
+                if( title.value !== '' &&
+                    author.value !== '' &&
+                    pages.value !== '' &&
+                    description.value !== '' &&
+                    status.value !== '' &&
                     errors.length == 0
                 ){
-                    myLibrary.push(new Book(form.elements["title"].value, form.elements["author"].value, form.elements["pages"].value, form.elements["description"].value, form.elements["status"].value))
+                    myLibrary.push(new Book(title.value, author.value, pages.value, description.value, status.value))
                     loadBooks() //refresh withouts loading
                     removeErrors(form);
                 }
@@ -164,6 +167,10 @@
                     showErrors(form)
                 }
             });
+
+
+            const closeDialog = dialog.querySelector("#js-close");
+            const openDialog = document.getElementById("open-dialog");
 
             openDialog.addEventListener("click", () => {
                 dialog.showModal()
@@ -178,16 +185,17 @@
         }
 
         function showErrors(form){ //function to show errors
-            ["title", "author", "description", "pages"].map((item) => {
-                if(form.elements[item].value === '') form.elements[item].nextElementSibling.classList.add("error")
+            errors = [];
+            [title, author, description, pages].map((item) => {
+                if(item.value === '') item.nextElementSibling.classList.add("error")
             })
         }
 
         function removeErrors(form){ //function to remove errors
             errors = [];
-            ["title", "author", "description", "pages"].map((item) => {
-                if(form.elements[item].value === '') form.elements[item].nextElementSibling.classList.remove("error");
-                form.elements[item].value = ''
+            [title, author, description, pages].map((item) => {
+                if(item.value === '') item.nextElementSibling.classList.remove("error");
+                item.value = ''
             })
         }
 
