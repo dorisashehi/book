@@ -17,7 +17,7 @@
 
     <script>
 
-        const myLibrary = [];
+        const myLibrary = []; //array to save books added
 
         function Book(title, author, pages, description, read = false){
             this.title = title
@@ -27,27 +27,23 @@
             this.read = read
         }
 
-        Book.prototype.setStatus = function (read) {
+        Book.prototype.setStatus = function (read) { //function to change status
             this.read = (read) ? true : false
         }
 
-        Book.prototype.getStatus = function(){
+        Book.prototype.getStatus = function(){ //function to get status
             return this.read
         }
 
-        function seedBooks(){
+        function seedBooks(){ //function test to add some fake books
             var book1 = new Book("Hobbit", "J.R.R. Tolkien", 29, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ");
-            //book1.setStatus(false)
-            console.log(book1.getStatus())
+            var book2 = new Book("New Storem", "Cicero", 295, "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.")
+            var book3 = new Book("Lorem Ipsum ", "Richard", 500, "Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC.")
 
-            var book2 = new Book("New Storem", "J.R.R. Tolkien", 295, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. ")
-            //book2.setStatus(true)
-            console.log(book2.getStatus())
-
-            myLibrary.push(book1, book2)
+            myLibrary.push(book1, book2, book3)
         }
 
-        function loadBooks(){
+        function loadBooks(){ //function to loaf books
             const row = document.querySelector(".line");
             var content = ""
 
@@ -60,29 +56,28 @@
                 emptyContent.classList.add("error")
                 emptyContent.textContent = "No books available! Add a new one."
                 content = emptyContent.innerHTML
-                console.log(content)
             }
             row.innerHTML = content
             getRemoveCard() //add listeners for remove button
             changeStatus()
         }
 
-        function getColumns(book, index){
+        function getColumns(book, index){ //function to get books in columns
 
             return(
                 `
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 h-320">
 
                         <div class="card mb-3" style="max-width: 540px; height: 100%;">
-                            <div class="row g-0">
-                                <div class="col-md-4">
+                            <div class="row g-0 h-100">
+                                <div class="col-md-4 pl-0">
                                     <img src="./assets/images/book.jpg" alt="Trendy Pants and Shoes" class="img-fluid rounded-start">
                                 </div>
                                 <div class="col-md-8 p-0">
                                     <div class="remove-icon" data-getid="${index}">
                                         <i class="fas fa-remove" title="Remove Book"></i>
                                     </div>
-                                    <div class="card-body">
+                                    <div class="card-body pl-0 pr-5">
                                         <h5 class="card-title">${book.title}</h5>
                                         <p class="card-text">
                                             <b>By:</b> ${book.author}
@@ -107,23 +102,21 @@
 
         }
 
-        function getRemoveCard(){
+        function getRemoveCard(){ //function to remove a book
             const removeBtn = document.querySelectorAll(".remove-icon");
 
             Array.from(removeBtn).map((btn) => {
                 btn.addEventListener("click", () => {
-
                     const id = btn.getAttribute('data-getid')
                     myLibrary.splice(id, 1);
                     loadBooks()
-                    console.log(myLibrary)
                 })
             })
 
         }
 
-
-        function addNewBook(){
+        let errors = [];
+        function addNewBook(){ //function to add a book
             const dialog = document.getElementById("dialog");
             const closeDialog = dialog.querySelector("#js-close");
             const openDialog = document.getElementById("open-dialog");
@@ -140,22 +133,60 @@
 
             submitBtn.addEventListener("click", (e) => {
 
-                console.log(form.elements["status"].value)
-                let inputValues = {
+                let result = validateFormFields(form)
+                if(result.formFields){
+                    removeErrors() //remove errors
+                    clearFormFields(form) //empty fields
+                    myLibrary.push(new Book(result.formFields.title, result.formFields.author, result.formFields.pages, result.formFields.description, result.formFields.read))
+                    loadBooks() //refresh withouts loading
+                }
+                else{
+                    e.preventDefault();
+                    errors.map((name) => {
+                        document.querySelector(`.${name}-error`).classList.add("error")
+                    })
+                }
+            });
+        }
+
+
+        function validateFormFields(form) { //function to validate form fields
+            removeErrors()
+            let inputValues ={
+                "formFields":{
                     title: form.elements["title"].value,
                     author: form.elements["author"].value,
                     pages: form.elements["pages"].value,
                     description: form.elements["description"].value,
-                    read: form.elements["status"].hasAttribute("checked") ? true : false
-
                 }
-                myLibrary.push(new Book(inputValues.title, inputValues.author, inputValues.pages, inputValues.description, inputValues.read))
-                loadBooks() //refresh withouts loading
-            });
+            }
+
+            if(! /^[a-zA-Z]/.test(inputValues.formFields.title)) errors.push("title")
+            if(!/^[a-zA-Z]/.test(inputValues.formFields.author)) errors.push("author")
+            if(!/^[0-9]*$/.test(inputValues.formFields.pages)) errors.push("pages")
+            if(! /^[a-zA-Z]/.test(inputValues.formFields.description)) errors.push("description")
+
+            return (Object.keys(errors).length === 0) ?  inputValues : errors
+
+
+        }
+        function removeErrors(){ //function to remove errors
+            errors = []
+            document.querySelector('.title-error').classList.remove("error")
+            document.querySelector('.author-error').classList.remove("error")
+            document.querySelector('.pages-error').classList.remove("error")
+            document.querySelector('.description-error').classList.remove("error")
+        }
+
+        function clearFormFields(form){ //function to clear fields of dialog box
+            form.elements["title"].value = ''
+            form.elements["author"].value = ""
+            form.elements["pages"].value = ""
+            form.elements["description"].value = ""
 
         }
 
-        function changeStatus(){
+        function changeStatus(){ //function to change the ctatus of the book
             const statusCheck = document.querySelectorAll('.card-body #status')
 
             Array.from(statusCheck).map((checkbox) => {
@@ -172,9 +203,7 @@
             })
 
         }
-
-
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", () => { //main function
             seedBooks()  //defaut values
             loadBooks()  //load all books
             addNewBook() //add new book
@@ -185,8 +214,7 @@
     </script>
 </head>
 <body>
-
-    <div class="container">
+    <div class="container mb-5">
         <div class="row col-12 mb-5">
             <h1></h1>
             <div class="row col-12">
@@ -203,22 +231,27 @@
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
+                    <span class="title-error">Something may have gone wrong</span>
                 </div>
                 <div class="form-group">
-                    <label for="title">Author</label>
+                    <label for="author">Author</label>
                     <input type="text" class="form-control" id="author" name="author" placeholder="Enter author" required>
+                    <span class="author-error">Something may have gone wrong</span>
                 </div>
                 <div class="form-group">
-                    <label for="title">Pages</label>
+                    <label for="pages">Pages</label>
                     <input type="number" class="form-control" id="pages" name="pages" placeholder="Enter Pages" required>
+                    <span class="pages-error">Something may have gone wrong</span>
                 </div>
                 <div class="form-group">
                     <label for="title">Description</label>
-                    <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+                    <textarea class="form-control" id="description" name="description" rows="5" maxlength="30" required></textarea>
+                    <span class="description-error">Something may have gone wrong</span>
                 </div>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="status" name="status" required>
                     <label class="form-check-label" for="status">Mark as read</label>
+                    <!-- <span class="help-block">Something may have gone wrong</span> -->
                 </div>
                 <div class="mt-4">
                     <input type="submit" id="submit" value="Submit" class="btn btn-primary" formnovalidate />
@@ -227,6 +260,5 @@
             </form>
         </dialog>
     </div>
-
 </body>
 </html>

@@ -64,3 +64,17 @@ header .mask .profile-container{
     padding: 30px 45px;
     width: 500px;
 }
+#dialog .title-error,
+#dialog .author-error,
+#dialog .pages-error,
+#dialog .description-error{
+    display: none;
+
+}
+#dialog .title-error.error,
+#dialog .author-error.error,
+#dialog .pages-error.error,
+#dialog .description-error.error{
+    display: block;
+
+}
