@@ -124,11 +124,50 @@
             const inputs = dialog.querySelectorAll("input");
             const form = dialog.querySelector("form")
 
+            const textRegExp =  /^[a-zA-Z]/;
+
+
+            ["title", "author", "description", "pages"].map((item) => { //on value change
+
+                form.elements[item].addEventListener("input", () => {
+
+                    let element = form.elements[item]
+                    let elementError = form.elements[item].nextElementSibling;
+                    let error = true;
+
+                    if (item == "pages" &&  element.value > 0) error = false;
+                    if(element.value.length > 0 && textRegExp.test(element.value)) error = false;
+                    if(error) {elementError.classList.add("error"); errors.push(item)}
+                    else  elementError.classList.remove("error")
+
+                })
+            })
+
+
+
+            submitBtn.addEventListener("click", (e) => { //on button click
+
+
+                if( form.elements["title"].value !== '' &&
+                    form.elements["author"].value !== '' &&
+                    form.elements["pages"].value !== '' &&
+                    form.elements["description"].value !== '' &&
+                    form.elements["status"].value !== '' &&
+                    errors.length == 0
+                ){
+                    myLibrary.push(new Book(form.elements["title"].value, form.elements["author"].value, form.elements["pages"].value, form.elements["description"].value, form.elements["status"].value))
+                    loadBooks() //refresh withouts loading
+                    removeErrors(form);
+                }
+                else{
+                    e.preventDefault();
+                    showErrors(form)
+                }
+            });
 
             openDialog.addEventListener("click", () => {
                 dialog.showModal()
-                removeErrors() //remove errors
-                clearFormFields(form) //empty fields
+                removeErrors(form); //remove errors
             })
 
             closeDialog.addEventListener("click", (e) => {
@@ -136,61 +175,22 @@
                 dialog.close();
             });
 
-            submitBtn.addEventListener("click", (e) => {
-
-                let result = validateFormFields(form)
-                if(result.formFields){
-                    removeErrors() //remove errors
-                    clearFormFields(form) //empty fields
-                    myLibrary.push(new Book(result.formFields.title, result.formFields.author, result.formFields.pages, result.formFields.description, result.formFields.read))
-                    loadBooks() //refresh withouts loading
-                }
-                else{
-                    e.preventDefault();
-                    errors.map((name) => {
-                        document.querySelector(`.${name}-error`).classList.add("error")
-                    })
-                }
-            });
         }
 
-
-        function validateFormFields(form) { //function to validate form fields
-            removeErrors()
-            let inputValues ={
-                "formFields":{
-                    title: form.elements["title"].value,
-                    author: form.elements["author"].value,
-                    pages: form.elements["pages"].value,
-                    description: form.elements["description"].value,
-                    read: form.elements["status"].hasAttribute("checked") ? true : false
-                }
-            }
-
-            if(! /^[a-zA-Z]/.test(inputValues.formFields.title)) errors.push("title")
-            if(!/^[a-zA-Z]/.test(inputValues.formFields.author)) errors.push("author")
-            if(inputValues.formFields.pages === '') errors.push("pages")
-            if(! /^[a-zA-Z]/.test(inputValues.formFields.description)) errors.push("description")
-
-            return (Object.keys(errors).length === 0) ?  inputValues : errors
-
-
-        }
-        function removeErrors(){ //function to remove errors
-            errors = []
-            document.querySelector('.title-error').classList.remove("error")
-            document.querySelector('.author-error').classList.remove("error")
-            document.querySelector('.pages-error').classList.remove("error")
-            document.querySelector('.description-error').classList.remove("error")
+        function showErrors(form){ //function to show errors
+            ["title", "author", "description", "pages"].map((item) => {
+                if(form.elements[item].value === '') form.elements[item].nextElementSibling.classList.add("error")
+            })
         }
 
-        function clearFormFields(form){ //function to clear fields of dialog box
-            form.elements["title"].value = ''
-            form.elements["author"].value = ""
-            form.elements["pages"].value = ""
-            form.elements["description"].value = ""
-
+        function removeErrors(form){ //function to remove errors
+            errors = [];
+            ["title", "author", "description", "pages"].map((item) => {
+                if(form.elements[item].value === '') form.elements[item].nextElementSibling.classList.remove("error");
+                form.elements[item].value = ''
+            })
         }
+
 
         function changeStatus(){ //function to change the ctatus of the book
             const statusCheck = document.querySelectorAll('.card-body #status')
@@ -237,12 +237,12 @@
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
-                    <em class="title-error">Put a valid name</em>
+                    <em class="title-error">Put a valid name (text only)</em>
                 </div>
                 <div class="form-group">
                     <label for="author">Author</label>
                     <input type="text" class="form-control" id="author" name="author" placeholder="Enter author" required>
-                    <em class="author-error">Put a valid author</em>
+                    <em class="author-error">Put a valid author (text only)</em>
                 </div>
                 <div class="form-group">
                     <label for="pages">Pages</label>
@@ -252,7 +252,7 @@
                 <div class="form-group">
                     <label for="title">Description</label>
                     <textarea class="form-control" id="description" name="description" rows="5" maxlength="30" required></textarea>
-                    <em class="description-error">Put a valid description</em>
+                    <em class="description-error">Put a valid description (text only)</em>
                 </div>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="status" name="status" required>
