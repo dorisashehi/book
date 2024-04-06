@@ -75,7 +75,7 @@
                                 </div>
                                 <div class="col-md-8 p-0">
                                     <div class="remove-icon" data-getid="${index}">
-                                        <i class="fas fa-remove" title="Remove Book"></i>
+                                        <i class="fas fa-remove" alt="Remove Book"></i>
                                     </div>
                                     <div class="card-body pl-0 pr-5">
                                         <h5 class="card-title">${book.title}</h5>
@@ -124,7 +124,12 @@
             const inputs = dialog.querySelectorAll("input");
             const form = dialog.querySelector("form")
 
-            openDialog.addEventListener("click", () => dialog.showModal())
+
+            openDialog.addEventListener("click", () => {
+                dialog.showModal()
+                removeErrors() //remove errors
+                clearFormFields(form) //empty fields
+            })
 
             closeDialog.addEventListener("click", (e) => {
                 e.preventDefault();
@@ -158,12 +163,13 @@
                     author: form.elements["author"].value,
                     pages: form.elements["pages"].value,
                     description: form.elements["description"].value,
+                    read: form.elements["status"].hasAttribute("checked") ? true : false
                 }
             }
 
             if(! /^[a-zA-Z]/.test(inputValues.formFields.title)) errors.push("title")
             if(!/^[a-zA-Z]/.test(inputValues.formFields.author)) errors.push("author")
-            if(!/^[0-9]*$/.test(inputValues.formFields.pages)) errors.push("pages")
+            if(inputValues.formFields.pages === '') errors.push("pages")
             if(! /^[a-zA-Z]/.test(inputValues.formFields.description)) errors.push("description")
 
             return (Object.keys(errors).length === 0) ?  inputValues : errors
@@ -231,22 +237,22 @@
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
-                    <span class="title-error">Something may have gone wrong</span>
+                    <em class="title-error">Put a valid name</em>
                 </div>
                 <div class="form-group">
                     <label for="author">Author</label>
                     <input type="text" class="form-control" id="author" name="author" placeholder="Enter author" required>
-                    <span class="author-error">Something may have gone wrong</span>
+                    <em class="author-error">Put a valid author</em>
                 </div>
                 <div class="form-group">
                     <label for="pages">Pages</label>
                     <input type="number" class="form-control" id="pages" name="pages" placeholder="Enter Pages" required>
-                    <span class="pages-error">Something may have gone wrong</span>
+                    <em class="pages-error">Put a valid number of pages</em>
                 </div>
                 <div class="form-group">
                     <label for="title">Description</label>
                     <textarea class="form-control" id="description" name="description" rows="5" maxlength="30" required></textarea>
-                    <span class="description-error">Something may have gone wrong</span>
+                    <em class="description-error">Put a valid description</em>
                 </div>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="status" name="status" required>

@@ -76,5 +76,7 @@ header .mask .profile-container{
 #dialog .pages-error.error,
 #dialog .description-error.error{
     display: block;
+    color: #ff484a;
+    font-size: 10px;
 
 }
