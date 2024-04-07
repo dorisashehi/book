@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <title>Books</title>
+    <title>My library</title>
 
     <link rel="stylesheet" href="./assets/style/main.css">
 
@@ -137,7 +137,7 @@
             const status = form.elements["status"];
             status.addEventListener("click", () => isRead = !isRead); //change read to not read
 
-            const inputs = ["title", "author", "pages", "description"].map((name) => form.elements[name]);
+            const inputs = [title, author, pages, description]; //input fields
             inputs.map((item) => { //on value change
                 item.addEventListener("input", () => { //validate input fields on change input
                     validateInputs(item, errors)
@@ -220,8 +220,16 @@
     </script>
 </head>
 <body>
+    <header>
+
+        <nav class="navbar navbar-expand-lg bg-body fixed-top">
+            <div class="container-fluid">
+                <i>My library</i>
+            </div>
+        </nav>
+    </header>
     <div class="container mb-6">
-        <div class="row col-12 mb-5">
+        <div class="row col-12 mb-3">
             <h1></h1>
             <div class="row col-12 row-actions">
                 <!-- Button trigger modal -->
@@ -265,5 +273,10 @@
             </form>
         </dialog>
     </div>
+    <footer class="bg-body-tertiary text-center text-lg-start">
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+          © 2024 MyLibrary.com
+        </div>
+    </footer>
 </body>
 </html>
