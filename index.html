@@ -19,6 +19,7 @@
 
         const myLibrary = []; //array to save books added
 
+
         function Book(title, author, pages, description, read = false){
             this.title = title
             this.author = author
@@ -33,9 +34,9 @@
 
         function seedBooks(){ //function test to add some fake books
             myLibrary.push(
-                new Book("Hobbit", "J.R.R. Tolkien", 29, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. "),
-                new Book("New Storem", "Cicero", 295, "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable."),
-                new Book("Lorem Ipsum ", "Richard", 500, "Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC.")
+                new Book("Hobbit", "J.R.R. Tolkien", 29, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the "),
+                new Book("New Storem", "Cicero", 295, "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alter"),
+                new Book("Lorem Ipsum ", "Richard", 500, "Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes o")
             )
         }
 
@@ -61,11 +62,11 @@
 
             return(
                 `
-                    <div class="col-lg-4 h-320">
+                    <div class="col-lg-4 column pb-3">
 
                         <div class="card mb-3" style="max-width: 540px; height: 100%;">
                             <div class="row g-0 h-100">
-                                <div class="col-md-4 pl-0">
+                                <div class="col-md-4">
                                     <img src="./assets/images/book.jpg" alt="Trendy Pants and Shoes" class="img-fluid rounded-start">
                                 </div>
                                 <div class="col-md-8 p-0">
@@ -73,11 +74,11 @@
                                         <i class="fas fa-remove" alt="Remove Book"></i>
                                     </div>
                                     <div class="card-body pl-0 pr-5">
-                                        <h5 class="card-title">${book.title}</h5>
+                                        <h5 class="card-title"><b>${book.title}</b></h5>
                                         <p class="card-text">
                                             <b>By:</b> ${book.author}
                                         </p>
-                                        <p class="card-text">
+                                        <p class="card-text card-description">
                                             <span>${book.description}</span>
                                         </p>
                                         <div class="form-check">
@@ -131,10 +132,11 @@
             const submitBtn = document.getElementById("submit");
             const form = dialog.querySelector("form")
             let errors = [];
+            let isRead = false;
+
             const inputs = ["title", "author", "pages", "description"].map((name) => form.elements[name]);
 
             const status = form.elements["status"];
-            let isRead = false;
             status.addEventListener("click", () => isRead = !isRead);
 
             inputs.map((item) => { //on value change
@@ -142,7 +144,6 @@
                     validateInputs(item, errors)
                 })
             })
-
 
             submitBtn.addEventListener("click", (e) => { //on button click
 
@@ -155,13 +156,7 @@
                     errors.length == 0
                 ){
 
-                    myLibrary.push(new Book(
-                        title.value,
-                        author.value,
-                        pages.value,
-                        description.value,
-                        isRead)
-                    )
+                    myLibrary.push(new Book(title.value,author.value,pages.value,description.value,isRead))
                     loadBooks() //refresh withouts loading
                     removeErrors(inputs);
                 }
@@ -171,23 +166,22 @@
                 }
             });
 
-
             const closeDialog = dialog.querySelector("#js-close");
-            const openDialog = document.getElementById("open-dialog");
-
-            openDialog.addEventListener("click", () => {
-                dialog.showModal()
-                removeErrors(inputs); //remove errors
-            })
-
-            closeDialog.addEventListener("click", (e) => {
+            closeDialog.addEventListener("click", (e) => { //close dialog box
                 e.preventDefault();
                 dialog.close();
             });
 
         }
+        function openDialogBox(){ //function to open the dialog box
+            const openDialog = document.getElementById("open-dialog");
+            openDialog.addEventListener("click", () => {
+                dialog.showModal()
+            })
+        }
 
-        function validateInputs(item, index){
+
+        function validateInputs(item, index){ //function to validate input fields of dialog box
 
             const textRegExp =  /^[a-zA-Z]/;
             let elementError = item.nextElementSibling;
@@ -195,7 +189,10 @@
 
             if (item.name == "pages" &&  item.value > 0) error = false;
             if(textRegExp.test(item.value)) error = false;
-            if(error) {elementError.classList.add("error"); errors.push(item)}
+
+            if(error) {
+                elementError.classList.add("error"); errors.push(item)
+            }
             else  elementError.classList.remove("error")
 
         }
@@ -215,18 +212,20 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => { //main function
+            const dialog = document.getElementById("dialog");
             seedBooks()  //defaut values
             loadBooks()  //load all books
             addNewBook() //add new book
+            openDialogBox() //open dialog box
         });
 
     </script>
 </head>
 <body>
-    <div class="container mb-5">
+    <div class="container mb-6">
         <div class="row col-12 mb-5">
             <h1></h1>
-            <div class="row col-12">
+            <div class="row col-12 row-actions">
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" id="open-dialog">
                     Add New
@@ -240,27 +239,26 @@
                 <div class="form-group">
                     <label for="title">Title*</label>
                     <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
-                    <em class="title-error">Put a valid name (text only)</em>
+                    <em class="title-error pt-2">Put a valid name (text only)</em>
                 </div>
                 <div class="form-group">
                     <label for="author">Author*</label>
                     <input type="text" class="form-control" id="author" name="author" placeholder="Enter author" required>
-                    <em class="author-error">Put a valid author (text only)</em>
+                    <em class="author-error pt-2">Put a valid author (text only)</em>
                 </div>
                 <div class="form-group">
                     <label for="pages">Pages*</label>
                     <input type="number" class="form-control" id="pages" name="pages" placeholder="Enter Pages" required>
-                    <em class="pages-error">Put a valid number of pages</em>
+                    <em class="pages-error pt-2">Put a valid number of pages</em>
                 </div>
                 <div class="form-group">
                     <label for="title">Description*</label>
-                    <textarea class="form-control" id="description" name="description" rows="5" maxlength="30" required></textarea>
-                    <em class="description-error">Put a valid description (text only)</em>
+                    <textarea class="form-control" id="description" name="description" rows="5" maxlength="100" required></textarea>
+                    <em class="description-error pt-2">Put a valid description (text only)</em>
                 </div>
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="status" name="status">
                     <label class="form-check-label" for="status">Mark as read</label>
-                    <!-- <span class="help-block">Something may have gone wrong</span> -->
                 </div>
                 <div class="mt-4">
                     <input type="submit" id="submit" value="Submit" class="btn btn-primary" formnovalidate />

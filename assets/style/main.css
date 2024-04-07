@@ -4,11 +4,21 @@ body{
 .container {
     min-height: 100%;
     height: 100%;
-    margin-top: 100px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.container .column{
+    height: 350px;
+}
+.container .row-actions{
+    padding-left: 31px;
 }
 .container .card .img-fluid{
     height: 100%;
     object-fit: cover;
+}
+.container .card-text.card-description{
+    height: 140px;
 }
 .container .card .remove-icon{
     position: absolute;
