@@ -62,18 +62,18 @@
 
             return(
                 `
-                    <div class="col-lg-4 column pb-3">
+                    <div class="col-lg-4 col-md-6 col-sm-12 column pb-3 max-h-96">
 
                         <div class="card mb-3" style="max-width: 540px; height: 100%;">
                             <div class="row g-0 h-100">
-                                <div class="col-md-4">
+                                <div class="remove-icon" data-getid="${index}">
+                                    <i class="fas fa-remove" alt="Remove Book"></i>
+                                </div>
+                                <div class="col-md-4 col-sm-12">
                                     <img src="./assets/images/book.jpg" alt="Trendy Pants and Shoes" class="img-fluid rounded-start">
                                 </div>
-                                <div class="col-md-8 p-0">
-                                    <div class="remove-icon" data-getid="${index}">
-                                        <i class="fas fa-remove" alt="Remove Book"></i>
-                                    </div>
-                                    <div class="card-body pl-0 pr-5">
+                                <div class="col-md-8 col-sm-12 p-lg-0">
+                                    <div class="card-body pl-lg-0 pl-sm-3 pr-lg-5 pr-sm-3">
                                         <h5 class="card-title"><b>${book.title}</b></h5>
                                         <p class="card-text">
                                             <b>By:</b> ${book.author}
@@ -134,13 +134,12 @@
             let errors = [];
             let isRead = false;
 
-            const inputs = ["title", "author", "pages", "description"].map((name) => form.elements[name]);
-
             const status = form.elements["status"];
-            status.addEventListener("click", () => isRead = !isRead);
+            status.addEventListener("click", () => isRead = !isRead); //change read to not read
 
+            const inputs = ["title", "author", "pages", "description"].map((name) => form.elements[name]);
             inputs.map((item) => { //on value change
-                item.addEventListener("input", () => {
+                item.addEventListener("input", () => { //validate input fields on change input
                     validateInputs(item, errors)
                 })
             })
@@ -155,7 +154,6 @@
                     status.value !== '' &&
                     errors.length == 0
                 ){
-
                     myLibrary.push(new Book(title.value,author.value,pages.value,description.value,isRead))
                     loadBooks() //refresh withouts loading
                     removeErrors(inputs);
@@ -204,7 +202,7 @@
         }
 
         function removeErrors(inputs){ //function to remove errors
-            errors = [];
+            errors = []; //remove errors
             inputs.map((item) => {
                 if(item.value === '') item.nextElementSibling.classList.remove("error");
                 item.value = ''

@@ -7,9 +7,9 @@ body{
     padding-top: 50px;
     padding-bottom: 50px;
 }
-.container .column{
+/* .container .column{
     height: 350px;
-}
+} */
 .container .row-actions{
     padding-left: 31px;
 }
@@ -23,7 +23,7 @@ body{
 .container .card .remove-icon{
     position: absolute;
     right: 0px;
-    right: 7px;
+    z-index: 2;
     top: -11px;
     border-radius: 6.5em;
     width: 20px;
@@ -90,3 +90,6 @@ header .mask .profile-container{
     font-size: 10px;
 
 }
+dialog[open]::backdrop {
+    background-color: rgb(0 0 0 / 50%);
+  }
