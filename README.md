@@ -1,4 +1,4 @@
-# My Library Project
+# My Library Project 📚
 
 -The project is developed using JavaScript (object constructor), HTML, and CSS. \
 -It provides the ability to view all books that you have read or not read yet and add new books to it. \
