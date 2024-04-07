@@ -20,6 +20,10 @@ header .navbar{
 }
 header .container-fluid{
     width: 86%;
+    justify-content: center;
+}
+header .navbar>.container-fluid {
+    justify-content: center;
 }
 .container .card .img-fluid{
     height: 100%;
@@ -96,4 +100,5 @@ dialog[open]::backdrop {
 }
 .line{
     padding: 0px;
+    justify-content: center;
 }
