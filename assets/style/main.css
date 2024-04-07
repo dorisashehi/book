@@ -4,7 +4,6 @@ body{
 header .navbar{
     background-color: #ff484a;
     color: #ffffff;
-    padding: 13px 122px;
     font-weight: bold;
     font-family: 'FontAwesome';
     letter-spacing: 1px;
@@ -19,8 +18,8 @@ header .navbar{
     padding-left: 31px;
     min-height: 91.1vh;
 }
-.container .row-actions{
-    padding-left: 31px;
+header .container-fluid{
+    width: 86%;
 }
 .container .card .img-fluid{
     height: 100%;
@@ -95,4 +94,6 @@ header .mask .profile-container{
 dialog[open]::backdrop {
     background-color: rgb(0 0 0 / 50%);
 }
-
+.line{
+    padding: 0px;
+}

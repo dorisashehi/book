@@ -31,9 +31,9 @@ function loadBooks(){ //function to loaf books
     }
     else{
         const emptyContent = document.createElement("div")
-        emptyContent.classList.add("error")
+        emptyContent.classList.add("col")
         emptyContent.textContent = "No books available! Add a new one."
-        content = emptyContent.innerHTML
+        content = emptyContent.outerHTML
     }
     bookContainer.innerHTML = content
     addEventListeners()
