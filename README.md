@@ -5,7 +5,7 @@
 -Validation of form fields is implemented before adding a book. \
 -You can change the status of the book when you click mark as read \
 -A dialog box will open when you click add new button where you can write the author, title, a description and status id readed or not \
--Project is also mobile responsive. \
+-Project is also mobile responsive.
 
 # Usage
 
