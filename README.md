@@ -1,7 +1,12 @@
 # My Library Project
 
--That project is created using javascript(object constructor), html, css \
--Offers the opportunity to watch all books in the library, and add new book in the library \
--Made the validation of the form fields before adding the book, created a dialog box to add the book and made it mobile responsive \
--Deployed in github \
+-The project is developed using JavaScript (object constructor), HTML, and CSS. \
+-It provides the ability to view all books in the library and add new books to it. \
+-Validation of form fields is implemented before adding a book. \
+-A dialog box is created for adding books, and the project is made mobile responsive. \
+-It is deployed on GitHub. \
 -live: https://dorisashehi.github.io/book/
+
+
+
+
