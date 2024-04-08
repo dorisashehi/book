@@ -1,23 +1,74 @@
 const myLibrary = []; //array to save books added
 
+class Book {
 
-function Book(title, author, pages, description, read = false){
-    this.title = title
-    this.author = author
-    this.pages = pages
-    this.description = description
-    this.read = read
-}
+    constructor(title, author, pages, description, read = false) {
+        console.log(read)
+      this.title = title
+      this.author = author
+      this.pages = pages
+      this.description = description
+      this.read = read
+    }
 
-Book.prototype.toggleReadStatus = function () { //function to change status
-    this.read = !this.read
+    get title() {
+      return this._title;
+    }
+
+    set title(title) {
+
+      this._title = title;
+    }
+
+    get author(){
+      return this._author;
+    }
+
+    set author(author) {
+
+      this._author = author;
+    }
+
+    get pages(){
+      return this._pages;
+    }
+
+    set pages(pages) {
+
+      this._pages = pages;
+    }
+
+    get description(){
+      return this._description;
+    }
+
+    set description(description) {
+
+      this._description = description;
+    }
+
+    get read(){
+      return this._read;
+    }
+
+    set read(read) {
+
+      this._read = read;
+    }
+
+    toggleReadStatus(){
+        this.read = !this.read
+    }
+
+
 }
 
 function seedBooks(){ //function test to add some fake books
     myLibrary.push(
         new Book("Hobbit", "J.R.R. Tolkien", 29, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the "),
         new Book("New Storem", "Cicero", 295, "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alter"),
-        new Book("Lorem Ipsum ", "Richard", 500, "Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes o")
+        new Book("Lorem Ipsum ", "Richard", 500, "Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes o)"),
+
     )
 }
 
@@ -186,7 +237,7 @@ function removeErrors(inputs){ //function to remove errors
     errors = []; //remove errors
     inputs.map((item) => {
         if(item.value === '') item.nextElementSibling.classList.remove("error");
-        item.value = ''
+        item.value = '';
     })
 }
 
